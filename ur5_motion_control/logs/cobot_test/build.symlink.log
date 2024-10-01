@@ -1,0 +1,4 @@
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/cobot_test/cmake/cobot_testConfig-version.cmake
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/cobot_test/cmake/cobot_testConfig.cmake
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/lib/cobot_test/pick_and_place_cobot_node
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/lib/pkgconfig/cobot_test.pc

@@ -1,0 +1,12 @@
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./setup.zsh
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./setup.bash
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./local_setup.zsh
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./setup.sh
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./env.sh
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./_setup_util.py
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./local_setup.bash
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./local_setup.sh
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./cmake.lock
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig-version.cmake
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/catkin_tools_prebuild/cmake/catkin_tools_prebuildConfig.cmake
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/lib/pkgconfig/catkin_tools_prebuild.pc

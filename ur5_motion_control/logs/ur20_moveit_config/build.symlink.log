@@ -1,0 +1,3 @@
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/ur20_moveit_config/cmake/ur20_moveit_configConfig-version.cmake
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/ur20_moveit_config/cmake/ur20_moveit_configConfig.cmake
+Symlinking /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/lib/pkgconfig/ur20_moveit_config.pc

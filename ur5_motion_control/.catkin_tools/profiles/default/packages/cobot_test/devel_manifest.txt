@@ -1,0 +1,6 @@
+.
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/cobot_test/cmake.lock /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./cmake.lock
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/cobot_test/share/cobot_test/cmake/cobot_testConfig-version.cmake /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/cobot_test/cmake/cobot_testConfig-version.cmake
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/cobot_test/share/cobot_test/cmake/cobot_testConfig.cmake /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/cobot_test/cmake/cobot_testConfig.cmake
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/cobot_test/lib/cobot_test/pick_and_place_cobot_node /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/lib/cobot_test/pick_and_place_cobot_node
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/cobot_test/lib/pkgconfig/cobot_test.pc /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/lib/pkgconfig/cobot_test.pc

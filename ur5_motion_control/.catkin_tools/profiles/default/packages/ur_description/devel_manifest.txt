@@ -1,0 +1,5 @@
+universal_robot/ur_description
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/ur_description/cmake.lock /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./cmake.lock
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/ur_description/share/ur_description/cmake/ur_descriptionConfig.cmake /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/ur_description/cmake/ur_descriptionConfig.cmake
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/ur_description/share/ur_description/cmake/ur_descriptionConfig-version.cmake /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/share/ur_description/cmake/ur_descriptionConfig-version.cmake
+/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/ur_description/lib/pkgconfig/ur_description.pc /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/lib/pkgconfig/ur_description.pc
