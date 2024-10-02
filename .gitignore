@@ -1,5 +1,5 @@
 # Specify filepatterns you want git to ignore.
 build/
-log/
+logs/
 devel/
 .catkin_tools
