@@ -1,2 +1,0 @@
-universal_robot/universal_robots
-/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/universal_robots/cmake.lock /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/./cmake.lock
