@@ -1,1 +1,0 @@
-/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/ur_kinematics/lib/python3/dist-packages/ur_kinematics/__init__.py

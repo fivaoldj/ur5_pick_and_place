@@ -1,8 +1,0 @@
-prefix=/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/install
-
-Name: catkin_tools_prebuild
-Description: Description of catkin_tools_prebuild
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

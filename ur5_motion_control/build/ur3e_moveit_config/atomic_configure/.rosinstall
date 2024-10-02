@@ -1,2 +1,0 @@
-- setup-file:
-    local-name: /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/ur3e_moveit_config/setup.sh

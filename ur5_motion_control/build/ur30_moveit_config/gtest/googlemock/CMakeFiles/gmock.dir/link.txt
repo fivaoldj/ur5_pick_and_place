@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC   -shared -Wl,-soname,libgmock.so -o ../lib/libgmock.so CMakeFiles/gmock.dir/src/gmock-all.cc.o  -Wl,-rpath,/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/build/ur30_moveit_config/gtest/lib ../lib/libgtest.so -lpthread 

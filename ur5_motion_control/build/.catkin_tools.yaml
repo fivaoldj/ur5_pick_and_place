@@ -1,6 +1,0 @@
-devel_space: /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel
-install: false
-install_space: /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/install
-profile: default
-source_space: /home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src
-workspace: /home/andrey/projects/ur5_pick_and_place/ur5_motion_control

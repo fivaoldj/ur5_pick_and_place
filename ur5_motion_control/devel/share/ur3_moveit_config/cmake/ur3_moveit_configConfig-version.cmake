@@ -1,1 +1,0 @@
-/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/.private/ur3_moveit_config/share/ur3_moveit_config/cmake/ur3_moveit_configConfig-version.cmake
