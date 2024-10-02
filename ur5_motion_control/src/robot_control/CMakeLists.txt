@@ -167,7 +167,7 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_executable(pick_and_place_cobot_node src/pick_place_cobot.cpp)
+add_executable(pick_and_place_cobot_node pick_place_cobot.cpp)
 add_dependencies(pick_and_place_cobot_node ${cobot_test_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(pick_and_place_cobot_node ${catkin_LIBRARIES})
 
