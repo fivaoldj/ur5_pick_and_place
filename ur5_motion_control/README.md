@@ -24,15 +24,43 @@ $ catkin build
 
 ## Запуск
 ### Запуск окружения для работы в gazebo и планирования движения в moveit 
+#### Запуск манипулятора
 Этот пункт опционален и необходим только для каких-то базовых тестов, чтобы посмотреть на робота и поуправлять им.
 ```
 # Запуск gazebo с моделью ur5e
 roslaunch ur_gazebo ur5e_bringup.launch
+
 # Запуск планера moveit 
 roslaunch ur5e_moveit_config moveit_planning_execution.launch sim:=true
+
 # Запуск rviz для управления роботом оттуда
 roslaunch ur5e_moveit_config moveit_rviz.launch
 ```
+#### Запуск схвата
+Этот пункт опционален и необходим только для каких-то базовых тестов, чтобы посмотреть на схват и поуправлять им.
+```
+# Запуск схвата в среде gazebo
+roslaunch robotiq_2f_85_gripper_gazebo robotiq_2f_85_bringup.launch
+
+# Отправка сообщения в топик на закрытие схвата
+rostopic pub /gripper_controller/gripper_cmd/goal control_msgs/GripperCommandActionGoal "header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: ''
+goal_id:
+  stamp:
+    secs: 0
+    nsecs: 0
+  id: ''
+goal:
+  command:
+    position: 1.0
+    max_effort: 0.5" 
+
+```
+
 ### Запуск проекта 
 ```
 $ source devel/setup.bash
