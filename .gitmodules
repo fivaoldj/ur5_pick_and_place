@@ -1,3 +1,6 @@
 [submodule "ur5_motion_control/src/robotiq"]
 	path = ur5_motion_control/src/robotiq
 	url = https://github.com/cambel/robotiq.git
+[submodule "ur5_motion_control/src/universal_robot"]
+	path = ur5_motion_control/src/universal_robot
+	url = https://github.com/fivaoldj/universal_robot.git
