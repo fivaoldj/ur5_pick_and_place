@@ -1,3 +1,6 @@
 [submodule "ur5_motion_control/src/universal_robot"]
 	path = ur5_motion_control/src/universal_robot
 	url = https://github.com/ros-industrial/universal_robot.git
+[submodule "ur5_motion_control/src/robotiq_85_gripper"]
+	path = ur5_motion_control/src/robotiq_85_gripper
+	url = https://github.com/Wisc-HCI/robotiq_85_gripper.git
