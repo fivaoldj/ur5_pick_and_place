@@ -4,3 +4,6 @@
 [submodule "ur5_motion_control/src/universal_robot"]
 	path = ur5_motion_control/src/universal_robot
 	url = https://github.com/fivaoldj/universal_robot.git
+[submodule "ur5_motion_control/src/ur_gripper_moveit_config"]
+	path = ur5_motion_control/src/ur_gripper_moveit_config
+	url = https://github.com/LearnRoboticsWROS/ur_gripper_moveit_config.git
