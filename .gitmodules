@@ -14,3 +14,6 @@
 [submodule "ur5_motion_control/src/robotiq"]
 	path = ur5_motion_control/src/robotiq
 	url = https://github.com/filesmuggler/robotiq.git
+[submodule "ur5_motion_control/src/graspnetAPI"]
+	path = ur5_motion_control/src/graspnetAPI
+	url = https://github.com/graspnet/graspnetAPI.git
