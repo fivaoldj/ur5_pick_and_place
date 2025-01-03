@@ -1,9 +1,6 @@
 [submodule "ur5_motion_control/src/robotiq"]
 	path = ur5_motion_control/src/robotiq
 	url = https://github.com/cambel/robotiq.git
-[submodule "ur5_motion_control/src/universal_robot"]
-	path = ur5_motion_control/src/universal_robot
-	url = https://github.com/fivaoldj/universal_robot.git
 [submodule "ur5_motion_control/src/robotiq_description"]
 	path = ur5_motion_control/src/robotiq_description
 	url = https://github.com/LearnRoboticsWROS/robotiq_description.git
@@ -13,3 +10,7 @@
 [submodule "ur5_motion_control/src/realsense_gazebo_plugin"]
 	path = ur5_motion_control/src/realsense_gazebo_plugin
 	url = https://github.com/issaiass/realsense_gazebo_plugin.git
+[submodule "ur5_motion_control/src/universal_robot"]
+	path = ur5_motion_control/src/universal_robot
+	url = https://github.com/ros-industrial/universal_robot.git
+	branch = melodic-devel
