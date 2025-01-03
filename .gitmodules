@@ -7,3 +7,6 @@
 [submodule "ur5_motion_control/src/robotiq_description"]
 	path = ur5_motion_control/src/robotiq_description
 	url = https://github.com/LearnRoboticsWROS/robotiq_description.git
+[submodule "ur5_motion_control/src/ur5_gripper_control"]
+	path = ur5_motion_control/src/ur5_gripper_control
+	url = https://github.com/fivaoldj/ur5_gripper_control.git

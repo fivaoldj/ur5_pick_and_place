@@ -69,3 +69,16 @@ $ rosrun cobot_test pick_and_place_node
 ```
   
 Работа pick&place начинается по инициализации "next" в RViz
+
+
+
+    <!-- Описание захвата Robotiq -->
+    <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_macro.xacro" />
+    <xacro:robotiq_arg2f_85 prefix="gripper_" transmission_hw_interface="hardware_interface/EffortJointInterface" />
+
+    <!-- Подключение захвата к tool0 -->
+    <joint name="tool0_gripper" type="fixed">
+      <parent link="tool0"/> <!-- Последнее звено UR5e -->
+      <child link="gripper_base_link"/> <!-- Базовое звено схвата -->
+      <origin xyz="0 0 0" rpy="0 0 0"/> <!-- Настройка положения схвата -->
+    </joint>

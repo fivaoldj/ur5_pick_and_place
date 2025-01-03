@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src/robotiq/robotiq_2f_gripper_action_server/include/**",
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src/robotiq/robotiq_2f_gripper_control/include/**",
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src/robotiq/robotiq_3f_gripper_articulated_gazebo_plugins/include/**",
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src/robotiq/robotiq_3f_gripper_control/include/**",
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src/robotiq/robotiq_ethercat/include/**",
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src/robotiq/robotiq_ft_sensor/include/**",
+        "/home/andrey/projects/ur5_pick_and_place/ur5_motion_control/src/universal_robot/ur_kinematics/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
