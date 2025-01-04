@@ -17,3 +17,6 @@
 [submodule "ur5_motion_control/src/graspnetAPI"]
 	path = ur5_motion_control/src/graspnetAPI
 	url = https://github.com/graspnet/graspnetAPI.git
+[submodule "ur5_motion_control/src/ggcnn"]
+	path = ur5_motion_control/src/ggcnn
+	url = https://github.com/fivaoldj/ggcnn.git
