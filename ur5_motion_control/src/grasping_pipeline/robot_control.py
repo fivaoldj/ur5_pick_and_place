@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+
+import sys
+import moveit_commander
+import rospy
+from geometry_msgs.msg import Pose, PoseStamped
+from std_srvs.srv import Empty
+from ur5_gripper_control.srv import FilterWorkspace, FilterWorkspaceRequest
+
+from tf.transformations import quaternion_from_euler
+
+class RobotControlUR5:
+    def __init__(self):
+        # Initialize MoveIt commander и rosnode
+        moveit_commander.roscpp_initialize(sys.argv)
+        rospy.init_node('pick_place', anonymous=False)
+        
+        # Octomap topics and services
+        self.camera_topics = ['camera_1_depth', 'camera_2_depth']
+        self.clear_octomap = rospy.ServiceProxy('/clear_octomap', Empty)
+        self.publish_octomap = rospy.ServiceProxy('/filter_workspace', FilterWorkspace)
+        
+        # Diagnostic publisher for waypoint poses
+        self.pose_pub = rospy.Publisher('/checker',PoseStamped,latch=True,queue_size=5)
+        
+        # Initialise robot and move groups
+        self.robot = moveit_commander.robot.RobotCommander()
+        arm_group = moveit_commander.move_group.MoveGroupCommander("ur5_arm")
+        self.gripper_group = moveit_commander.move_group.MoveGroupCommander("gripper")
+        
+        pose_goal = Pose()
+        pose_goal.orientation = arm_group.get_current_pose().pose.orientation
+
+        # Start at home position
+        self.update_octomap()
+        home_state = arm_group.get_current_state().joint_state
+        home_state.name = list(home_state.name)[:6]
+        home_state.position = [arm_group.get_named_target_values('home')['shoulder_pan_joint'],
+                                arm_group.get_named_target_values('home')['shoulder_lift_joint'],
+                                arm_group.get_named_target_values('home')['elbow_joint'],
+                                arm_group.get_named_target_values('home')['wrist_1_joint'],
+                                arm_group.get_named_target_values('home')['wrist_2_joint'],
+                                arm_group.get_named_target_values('home')['wrist_3_joint']]
+        plan = arm_group.plan(home_state)
+        success = arm_group.execute(plan[1], wait=True)
+        arm_group.stop()
+        while not success:  # FALLBACK FOR SAFETY
+            arm_group.stop()
+            plan = arm_group.plan(home_state)
+            success = arm_group.execute(plan[1], wait=True)
+            arm_group.stop()
+        rospy.sleep(2)
+        rospy.loginfo("RobotControl class initialize successfully")
+
+    def update_octomap(self):
+        """
+        Update octomap in moveit planning scene.
+        """
+        
+        # First clearing octomap
+        self.clear_octomap.call()
+        # Loop through available depth cameras and obtain pointclouds for octomap
+        for camera in self.camera_topics:
+            req = FilterWorkspaceRequest()
+            req.pointcloud_topic.data = camera + '/depth/color/points/'
+            req.image_topic.data = camera + '/color/image_raw/'
+            self.publish_octomap.call(req)
+        return
+    
+    def to_home(self):
+        """
+        Этот метод необходим для того, чтобы спозиционировать
+        робота в домашнее положение.
+        """
+        self.update_octomap()
+        plan = self.arm_group.plan(self.home_state)
+        success = self.arm_group.execute(plan[1], wait=True)
+        self.arm_group.stop()
+        while not success:  # FALLBACK FOR SAFETY
+            self.arm_group.stop()
+            plan = self.arm_group.plan(self.home_state)
+            success = self.arm_group.execute(plan[1], wait=True)
+            self.arm_group.stop()
+        rospy.sleep(1)
+        rospy.loginfo("Robot is home position")
+
+    def to_grasp(self, x, y, z, predicted_theta):
+        """
+        Этот метод необходим для того, чтобы спозиционировать
+        робота таким образом, чтобы захватить объект.
+        Парметры x, y, z, predicted_theta рассчитываются нейросетью.
+        """
+        self.update_octomap()
+        self.pose_goal.position.x = x
+        self.pose_goal.position.y = y
+        self.pose_goal.position.z = z
+        q = quaternion_from_euler(0, 0, predicted_theta)
+        self.pose_goal.orientation.x = q[0]
+        self.pose_goal.orientation.y = q[1]
+        self.pose_goal.orientation.z = q[2]
+        self.pose_goal.orientation.w = q[3]
+        self.arm_group.set_max_velocity_scaling_factor(0.1)
+        self.arm_group.set_pose_target(self.pose_goal)
+        plan = self.arm_group.plan()
+        success = self.arm_group.execute(plan[1], wait=True)
+        self.arm_group.stop()
+        self.arm_group.clear_pose_targets()
+        while not success:  # FALLBACK FOR SAFETY
+            self.arm_group.set_pose_target(self.pose_goal)
+            plan = self.arm_group.plan()
+            success = self.arm_group.execute(plan[1], wait=True)
+            self.arm_group.stop()
+            self.arm_group.clear_pose_targets()
+        rospy.sleep(1)
+        rospy.loginfo("Robot is grasp position")
+
+    def close_gripper(self):
+        """
+        Этот метод необходим для закрытия схвата.
+        """
+        self.update_octomap()
+        close_gripper = [self.gripper_group.get_named_target_values('closed')['robotiq_85_left_knuckle_joint']]
+        self.gripper_group.go(close_gripper, wait=True)
+        self.gripper_group.stop()
+        rospy.sleep(1)
+        rospy.loginfo("Gripper is close")
+
+    def open_gripper(self):
+        """
+        Этот метод необходим для открытия схвата.
+        """
+        self.update_octomap()
+        open_gripper = [self.gripper_group.get_named_target_values('open')['robotiq_85_left_knuckle_joint']]
+        self.gripper_group.go(open_gripper, wait=True)
+        self.gripper_group.stop()
+        rospy.sleep(1)
+        rospy.loginfo("Gripper is open")
