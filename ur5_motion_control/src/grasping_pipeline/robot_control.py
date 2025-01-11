@@ -25,30 +25,38 @@ class RobotControlUR5:
         
         # Initialise robot and move groups
         self.robot = moveit_commander.robot.RobotCommander()
-        arm_group = moveit_commander.move_group.MoveGroupCommander("ur5_arm")
+        self.arm_group = moveit_commander.move_group.MoveGroupCommander("ur5_arm")
         self.gripper_group = moveit_commander.move_group.MoveGroupCommander("gripper")
         
-        pose_goal = Pose()
-        pose_goal.orientation = arm_group.get_current_pose().pose.orientation
+        self.arm_group.set_max_velocity_scaling_factor(1)
+        self.arm_group.set_max_acceleration_scaling_factor(1)
+        self.arm_group.set_planning_time(10.0)
+
+        self.gripper_group.set_max_velocity_scaling_factor(1)
+        self.gripper_group.set_max_acceleration_scaling_factor(1)
+        self.gripper_group.set_planning_time(10.0)
+
+        self.pose_goal = Pose()
+        self.pose_goal.orientation = self.arm_group.get_current_pose().pose.orientation
 
         # Start at home position
         self.update_octomap()
-        home_state = arm_group.get_current_state().joint_state
-        home_state.name = list(home_state.name)[:6]
-        home_state.position = [arm_group.get_named_target_values('home')['shoulder_pan_joint'],
-                                arm_group.get_named_target_values('home')['shoulder_lift_joint'],
-                                arm_group.get_named_target_values('home')['elbow_joint'],
-                                arm_group.get_named_target_values('home')['wrist_1_joint'],
-                                arm_group.get_named_target_values('home')['wrist_2_joint'],
-                                arm_group.get_named_target_values('home')['wrist_3_joint']]
-        plan = arm_group.plan(home_state)
-        success = arm_group.execute(plan[1], wait=True)
-        arm_group.stop()
+        self.home_state = self.arm_group.get_current_state().joint_state
+        self.home_state.name = list(self.home_state.name)[:6]
+        self.home_state.position = [self.arm_group.get_named_target_values('home')['shoulder_pan_joint'],
+                                self.arm_group.get_named_target_values('home')['shoulder_lift_joint'],
+                                self.arm_group.get_named_target_values('home')['elbow_joint'],
+                                self.arm_group.get_named_target_values('home')['wrist_1_joint'],
+                                self.arm_group.get_named_target_values('home')['wrist_2_joint'],
+                                self.arm_group.get_named_target_values('home')['wrist_3_joint']]
+        plan = self.arm_group.plan(self.home_state)
+        success = self.arm_group.execute(plan[1], wait=True)
+        self.arm_group.stop()
         while not success:  # FALLBACK FOR SAFETY
-            arm_group.stop()
-            plan = arm_group.plan(home_state)
-            success = arm_group.execute(plan[1], wait=True)
-            arm_group.stop()
+            self.arm_group.stop()
+            plan = self.arm_group.plan(self.home_state)
+            success = self.arm_group.execute(plan[1], wait=True)
+            self.arm_group.stop()
         rospy.sleep(2)
         rospy.loginfo("RobotControl class initialize successfully")
 
@@ -84,22 +92,23 @@ class RobotControlUR5:
         rospy.sleep(1)
         rospy.loginfo("Robot is home position")
 
-    def to_grasp(self, x, y, z, predicted_theta):
+    def to_grasp(self, x=0.5, y=0, z=0.5, theta=0):
         """
         Этот метод необходим для того, чтобы спозиционировать
         робота таким образом, чтобы захватить объект.
-        Парметры x, y, z, predicted_theta рассчитываются нейросетью.
+        Парметры x, y, z, theta рассчитываются нейросетью.
         """
+        
         self.update_octomap()
         self.pose_goal.position.x = x
         self.pose_goal.position.y = y
         self.pose_goal.position.z = z
-        q = quaternion_from_euler(0, 0, predicted_theta)
+        q = quaternion_from_euler(theta, 0, 0)
         self.pose_goal.orientation.x = q[0]
         self.pose_goal.orientation.y = q[1]
         self.pose_goal.orientation.z = q[2]
         self.pose_goal.orientation.w = q[3]
-        self.arm_group.set_max_velocity_scaling_factor(0.1)
+
         self.arm_group.set_pose_target(self.pose_goal)
         plan = self.arm_group.plan()
         success = self.arm_group.execute(plan[1], wait=True)
