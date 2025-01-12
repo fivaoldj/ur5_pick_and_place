@@ -104,63 +104,55 @@ class RobotControlUR5:
 
 
     def to_grasp(self, x=0.5, y=0, z=0.5, angle=0):
-        """
-        Перемещает UR5 к заданной позиции (x, y, z), оставляя схват направленным вниз
-        и вращает фланец на угол theta (в радианах) вокруг вертикальной оси.
-        
-        Параметры:
-            x, y, z - координаты захвата.
-            theta - угол вращения схвата вокруг оси Z.
-        """
-        
-        self.to_home()
-        self.rotate_flangue(angle)
+        self.to_home()  # Перейти в начальную позицию
+        self.rotate_flangue(angle)  # Повернуть фланец на заданный угол
 
-        # Обновляем Octomap для предотвращения коллизий
+        # Обновить Octomap
         self.update_octomap()
-        
-        # Едем сначала в позицию над объектом 
+
+        # Переместиться над целевой позицией
         self.pose_goal.position.x = x
         self.pose_goal.position.y = y
-        
-        # Планируем и выполняем движение
-        self.arm_group.set_pose_target(self.pose_goal)
-        plan = self.arm_group.plan()
-        success = self.arm_group.execute(plan[1], wait=True)
-        self.arm_group.stop()
-        self.arm_group.clear_pose_targets()
-        
-        while not success:  # Резервный план на случай ошибки
-            self.arm_group.set_pose_target(self.pose_goal)
-            plan = self.arm_group.plan()
-            success = self.arm_group.execute(plan[1], wait=True)
-            self.arm_group.stop()
-            self.arm_group.clear_pose_targets()
-        
-        rospy.sleep(1)
-        rospy.loginfo("Robot is in grasp position")
+        self.pose_goal.position.z = z + 0.1  # Начать на 10 см выше цели
 
-        # Обновляем Octomap для предотвращения коллизий
-        self.update_octomap()
-        # Опускаемся по z
-        self.pose_goal.position.z = z
-        
-        # Планируем и выполняем движение
+        # Установить ориентацию
+        self.pose_goal.orientation = self.arm_group.get_current_pose().pose.orientation
         self.arm_group.set_pose_target(self.pose_goal)
+
+        # Добавить допуски и увеличить время планирования
+        self.arm_group.set_goal_tolerance(0.01)
+        self.arm_group.set_planning_time(20.0)
+
+        # Планировать и выполнять движение
         plan = self.arm_group.plan()
+        if not plan[0]:
+            rospy.logerr("Не удалось спланировать движение к целевой позиции")
+            return
         success = self.arm_group.execute(plan[1], wait=True)
         self.arm_group.stop()
         self.arm_group.clear_pose_targets()
-        
-        while not success:  # Резервный план на случай ошибки
-            self.arm_group.set_pose_target(self.pose_goal)
-            plan = self.arm_group.plan()
+
+        if success:
+            rospy.loginfo("Робот переместился над целевой позицией")
+        else:
+            rospy.logerr("Ошибка выполнения движения")
+            return
+
+        # Опуститься до целевой координаты z
+        self.pose_goal.position.z = z
+        self.arm_group.set_pose_target(self.pose_goal)
+        plan = self.arm_group.plan()
+        if plan[0]:
             success = self.arm_group.execute(plan[1], wait=True)
             self.arm_group.stop()
             self.arm_group.clear_pose_targets()
-        
-        rospy.sleep(1)
-        rospy.loginfo("Robot is in grasp position")
+            if success:
+                rospy.loginfo("Робот переместился в целевую позицию захвата")
+            else:
+                rospy.logerr("Ошибка выполнения движения в позицию захвата")
+        else:
+            rospy.logerr("Не удалось спланировать движение в позицию захвата")
+
 
     def close_gripper(self):
         """
