@@ -2,12 +2,13 @@
 
 import sys
 import moveit_commander
+import math
 import rospy
 from geometry_msgs.msg import Pose, PoseStamped
 from std_srvs.srv import Empty
 from ur5_gripper_control.srv import FilterWorkspace, FilterWorkspaceRequest
 
-from tf.transformations import quaternion_from_euler
+from tf.transformations import quaternion_from_euler, quaternion_multiply
 
 class RobotControlUR5:
     def __init__(self):
@@ -92,36 +93,74 @@ class RobotControlUR5:
         rospy.sleep(1)
         rospy.loginfo("Robot is home position")
 
-    def to_grasp(self, x=0.5, y=0, z=0.5, theta=0):
+
+    def rotate_flangue(self, angle):
+        joint_goal = self.arm_group.get_current_joint_values()
+        joint_goal[5] = angle * math.pi / 180
+        self.arm_group.go(joint_goal, wait=True)
+        self.arm_group.stop()
+        rospy.sleep(1)
+        rospy.loginfo("Flangue is already rotate")
+
+
+    def to_grasp(self, x=0.5, y=0, z=0.5, angle=0):
         """
-        Этот метод необходим для того, чтобы спозиционировать
-        робота таким образом, чтобы захватить объект.
-        Парметры x, y, z, theta рассчитываются нейросетью.
+        Перемещает UR5 к заданной позиции (x, y, z), оставляя схват направленным вниз
+        и вращает фланец на угол theta (в радианах) вокруг вертикальной оси.
+        
+        Параметры:
+            x, y, z - координаты захвата.
+            theta - угол вращения схвата вокруг оси Z.
         """
         
+        self.to_home()
+        self.rotate_flangue(angle)
+
+        # Обновляем Octomap для предотвращения коллизий
         self.update_octomap()
+        
+        # Едем сначала в позицию над объектом 
         self.pose_goal.position.x = x
         self.pose_goal.position.y = y
-        self.pose_goal.position.z = z
-        q = quaternion_from_euler(theta, 0, 0)
-        self.pose_goal.orientation.x = q[0]
-        self.pose_goal.orientation.y = q[1]
-        self.pose_goal.orientation.z = q[2]
-        self.pose_goal.orientation.w = q[3]
-
+        
+        # Планируем и выполняем движение
         self.arm_group.set_pose_target(self.pose_goal)
         plan = self.arm_group.plan()
         success = self.arm_group.execute(plan[1], wait=True)
         self.arm_group.stop()
         self.arm_group.clear_pose_targets()
-        while not success:  # FALLBACK FOR SAFETY
+        
+        while not success:  # Резервный план на случай ошибки
             self.arm_group.set_pose_target(self.pose_goal)
             plan = self.arm_group.plan()
             success = self.arm_group.execute(plan[1], wait=True)
             self.arm_group.stop()
             self.arm_group.clear_pose_targets()
+        
         rospy.sleep(1)
-        rospy.loginfo("Robot is grasp position")
+        rospy.loginfo("Robot is in grasp position")
+
+        # Обновляем Octomap для предотвращения коллизий
+        self.update_octomap()
+        # Опускаемся по z
+        self.pose_goal.position.z = z
+        
+        # Планируем и выполняем движение
+        self.arm_group.set_pose_target(self.pose_goal)
+        plan = self.arm_group.plan()
+        success = self.arm_group.execute(plan[1], wait=True)
+        self.arm_group.stop()
+        self.arm_group.clear_pose_targets()
+        
+        while not success:  # Резервный план на случай ошибки
+            self.arm_group.set_pose_target(self.pose_goal)
+            plan = self.arm_group.plan()
+            success = self.arm_group.execute(plan[1], wait=True)
+            self.arm_group.stop()
+            self.arm_group.clear_pose_targets()
+        
+        rospy.sleep(1)
+        rospy.loginfo("Robot is in grasp position")
 
     def close_gripper(self):
         """
