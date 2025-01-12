@@ -19,13 +19,15 @@ class GazeboObjectManager:
         self.is_initialized = False
 
         # Инициализация ROS
-        rospy.init_node("gazebo_object_manager", anonymous=True)
+        # rospy.init_node("gazebo_object_manager", anonymous=True)
 
         # Проверка наличия сервисов Gazebo
         rospy.wait_for_service(self.spawn_service)
         rospy.wait_for_service(self.delete_service)
         rospy.wait_for_service(self.get_state_service)
         self.is_initialized = True
+        rospy.loginfo("GazeboObjectManager class was ititialized")
+
 
     def create_object(self, position=(0, 0, 0), orientation=(0, 0, 0, 1)):
         """

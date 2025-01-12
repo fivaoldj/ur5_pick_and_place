@@ -14,7 +14,7 @@ class RobotControlUR5:
     def __init__(self):
         # Initialize MoveIt commander и rosnode
         moveit_commander.roscpp_initialize(sys.argv)
-        rospy.init_node('pick_place', anonymous=False)
+        # rospy.init_node('pick_place', anonymous=False)
         
         # Octomap topics and services
         self.camera_topics = ['camera_1_depth', 'camera_2_depth']
@@ -58,7 +58,7 @@ class RobotControlUR5:
             plan = self.arm_group.plan(self.home_state)
             success = self.arm_group.execute(plan[1], wait=True)
             self.arm_group.stop()
-        rospy.sleep(2)
+        rospy.sleep(1)
         rospy.loginfo("RobotControl class initialize successfully")
 
     def update_octomap(self):
