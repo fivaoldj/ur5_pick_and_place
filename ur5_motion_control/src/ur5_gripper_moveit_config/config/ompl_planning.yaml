@@ -122,6 +122,7 @@ planner_configs:
     max_failures: 5000  # maximum consecutive failure limit. default: 5000
 ur5_arm:
   default_planner_config: None
+  collision_checking: false
   planner_configs:
     - SBL
     - EST

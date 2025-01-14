@@ -158,8 +158,11 @@ class RobotControlUR5:
         """
         Этот метод необходим для закрытия схвата.
         """
-        self.update_octomap()
+        # self.update_octomap()
         close_gripper = [self.gripper_group.get_named_target_values('closed')['robotiq_85_left_knuckle_joint']]
+        # self.gripper_group.go(close_gripper, wait=True)
+        self.gripper_group.set_start_state_to_current_state()  # Установить текущее состояние как начальное
+        self.gripper_group.set_max_velocity_scaling_factor(0.5)  # Ограничить скорость движения
         self.gripper_group.go(close_gripper, wait=True)
         self.gripper_group.stop()
         rospy.sleep(1)
@@ -169,9 +172,42 @@ class RobotControlUR5:
         """
         Этот метод необходим для открытия схвата.
         """
-        self.update_octomap()
+        # self.update_octomap()
+        self.gripper_group.set_planner_id("RRTConnectkConfigDefault")  # Выбор планировщика
         open_gripper = [self.gripper_group.get_named_target_values('open')['robotiq_85_left_knuckle_joint']]
         self.gripper_group.go(open_gripper, wait=True)
         self.gripper_group.stop()
         rospy.sleep(1)
         rospy.loginfo("Gripper is open")
+
+    def go_to(self, x=0.5, y=0, z=0.5):
+        # Обновить Octomap
+        self.update_octomap()
+
+        # Переместиться над целевой позицией
+        self.pose_goal.position.x = x
+        self.pose_goal.position.y = y
+        self.pose_goal.position.z = z
+
+        # Установить ориентацию
+        self.pose_goal.orientation = self.arm_group.get_current_pose().pose.orientation
+        self.arm_group.set_pose_target(self.pose_goal)
+
+        # Добавить допуски и увеличить время планирования
+        self.arm_group.set_goal_tolerance(0.005)
+        self.arm_group.set_planning_time(20.0)
+
+        # Планировать и выполнять движение
+        plan = self.arm_group.plan()
+        if not plan[0]:
+            rospy.logerr("Не удалось спланировать движение к целевой позиции")
+            return
+        success = self.arm_group.execute(plan[1], wait=True)
+        self.arm_group.stop()
+        self.arm_group.clear_pose_targets()
+
+        if success:
+            rospy.loginfo("Робот переместился над целевой позицией")
+        else:
+            rospy.logerr("Ошибка выполнения движения")
+            return
